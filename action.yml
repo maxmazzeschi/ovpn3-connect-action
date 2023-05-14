@@ -36,4 +36,4 @@ runs:
         echo "${{ inputs.vpn-pass }}" >> .github/vpn-pass.txt
         ls -al .github
         sudo chown -R openvpn:openvpn /var/lib/openvpn3
-        { echo "${{ inputs.vpn-user }}" ; echo "${{ inputs.vpn-pass }}" ; } | openvpn3 session-start --config .github/vpn.ovpn
+        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | openvpn3 session-start --config .github/vpn.ovpn
