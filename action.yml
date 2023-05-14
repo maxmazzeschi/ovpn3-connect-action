@@ -23,11 +23,11 @@ runs:
     - name: Install openvpn3
       shell: bash
       run: |
-        apt install apt-transport-https
-        wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub
-        apt-key add openvpn-repo-pkg-key.pub
+        sudo apt install apt-transport-https
+        sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub
+        sudo apt-key add openvpn-repo-pkg-key.pub
         DISTRO=`lsb_release -c -s`; wget -O /etc/apt/sources.list.d/openvpn3.list https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-$DISTRO.list
-        apt update
+        sudo apt update
         sudo apt install -y openvpn3
     - name: VPN Connect
       shell: bash
@@ -35,5 +35,5 @@ runs:
         echo "${{ inputs.vpn-user }}" >> .github/vpn-user.txt
         echo "${{ inputs.vpn-pass }}" >> .github/vpn-pass.txt
         ls -al .github
-        chown -R openvpn:openvpn /var/lib/openvpn3
+        sudo chown -R openvpn:openvpn /var/lib/openvpn3
         { echo "${{ inputs.vpn-user }}" ; echo "${{ inputs.vpn-pass }}" ; } | openvpn3 session-start --config .github/vpn.ovpn
