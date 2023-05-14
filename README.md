@@ -11,8 +11,8 @@ Based on "https://github.com/golfzaptw/action-connect-ovpn/issues/36#issuecommen
   uses: aduriseti/ovpn3-connect-action@v1
   with:
     ovpn-config:  ${{ secrets.OVPN_CONFIG }}
-    vpn-user:     ${{ secrets.VPN_USER }}
-    vpn-pass:     ${{ secrets.VPN_PASS }}
+    vpn-user:     ${{ secrets.OVPN_USER }}
+    vpn-pass:     ${{ secrets.OVPN_PASS }}
 .........
 USE VPN CONNECTION HERE
 .........
