@@ -31,6 +31,6 @@ jobs:
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Kill VPN Connection
-      if: always()
-      run: |
-        sudo pkill openvpn
+        if: always()
+        run: |
+          sudo pkill openvpn
