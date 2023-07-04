@@ -1,4 +1,4 @@
-name: ovpn3-connect-action-container
+name: ovpn3-connect-action
 description: 
   Setup vpn using a self-contained .ovpn file
 inputs:
