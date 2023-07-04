@@ -8,7 +8,7 @@ Based on "https://github.com/golfzaptw/action-connect-ovpn/issues/36#issuecommen
 # Usage:
 ```
 - name: Connect VPN
-  uses: aduriseti/ovpn3-connect-action@v1
+  uses: maxmazzeschi/ovpn3-connect-action@v1
   with:
     ovpn-config:  ${{ secrets.OVPN_CONFIG }}
     vpn-user:     ${{ secrets.OVPN_USER }}
