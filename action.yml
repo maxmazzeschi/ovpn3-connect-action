@@ -27,4 +27,4 @@ runs:
     - name: VPN Connect
       shell: bash
       run: |
-        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | openvpn  --config .github/vpn.ovpn
+        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | sudo openvpn  --config .github/vpn.ovpn --ignore-unknown
