@@ -27,5 +27,4 @@ runs:
     - name: VPN Connect
       shell: bash
       run: |
-        sudo chown -R openvpn:openvpn /var/lib/openvpn3
-        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | openvpn3 session-start --config .github/vpn.ovpn
+        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | openvpn  --config .github/vpn.ovpn
