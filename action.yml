@@ -45,7 +45,7 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        choco install openvpn
+        choco install openvpn -r
     - name: VPN Connect (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
