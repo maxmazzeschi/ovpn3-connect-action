@@ -50,21 +50,36 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        # Get the name of the VPN interface (e.g., "TAP-Windows Adapter")
-        $vpnInterface = (Get-NetAdapter | Where-Object { $_.InterfaceDescription -match "TAP-Windows|OpenVPN" }).InterfaceIndex
-        if (-not $vpnInterface) {
-            Write-Host "VPN interface not found. Ensure the VPN is connected."
+        # Find all VPN interfaces (matching TAP-Windows or OpenVPN)
+        $vpnInterfaces = Get-NetAdapter | Where-Object { $_.InterfaceDescription -match "TAP-Windows|OpenVPN" }
+
+        if (-not $vpnInterfaces) {
+            Write-Host "No VPN interfaces found. Ensure the VPN is connected."
             exit
         }
 
-        # Get the gateway IP associated with the VPN interface from the route table
-        $vpnGateway = (Get-NetRoute | Where-Object { $_.InterfaceIndex -eq $vpnInterface -and $_.DestinationPrefix -eq "0.0.0.0/0" }).NextHop
+        # Find the active VPN interface being used for routing
+        $vpnGateway = $null
+
+        foreach ($interface in $vpnInterfaces) {
+            $gateway = (Get-NetRoute | Where-Object { $_.InterfaceIndex -eq $interface.InterfaceIndex -and $_.DestinationPrefix -eq "0.0.0.0/0" }).NextHop
+
+            if ($gateway) {
+                $vpnGateway = $gateway
+                $vpnInterface = $interface
+                break  # Use the first matching active interface
+            }
+        }
 
         if (-not $vpnGateway) {
             Write-Host "VPN Gateway IP not found. Please check your VPN connection."
             exit
         }
-        echo $vpnGateway
+
+        # Display selected interface and gateway for debugging
+        Write-Host "Using VPN Interface: $($vpnInterface.InterfaceDescription) (Index: $($vpnInterface.InterfaceIndex))"
+        Write-Host "VPN Gateway IP: $vpnGateway"
+
         echo "${{ inputs.vpn-user }}" | Out-File -FilePath auth.txt -Encoding ascii
         echo "${{ inputs.vpn-pass }}" | Out-File -Append -FilePath auth.txt -Encoding ascii
         Start-Process "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config ".github\vpn.ovpn" --auth-user-pass "auth.txt" --allow-compression yes --route-nopull --route 10.10.0.0 $vpnGateway'
