@@ -1,6 +1,6 @@
 name: ovpn3-connector
 description: 
-  Setup vpn using a self-contained .ovpn file
+  Setup vpn using a self-contained .ovpn file on both Windows and Linux
 inputs:
   ovpn-config:
     description: Complete self-contained .ovpn file
@@ -14,17 +14,42 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Write VPN Files
+    # Steps for Linux runners
+    - name: Write VPN Files (Linux)
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         mkdir -p ~/.ssh
         echo "${{ inputs.ovpn-config }}" > .github/vpn.ovpn
         ls -al .github/vpn.ovpn
-    - name: Install openvpn3
+    - name: Install openvpn3 (Linux)
+      if: runner.os == 'Linux'
       shell: bash
       run: |
-         sudo apt-get update && sudo apt-get install openvpn
-    - name: VPN Connect
+        sudo apt-get update && sudo apt-get install openvpn
+    - name: VPN Connect (Linux)
+      if: runner.os == 'Linux'
       shell: bash
       run: |
-        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | sudo openvpn  --config .github/vpn.ovpn --daemon
+        { printf "${{ inputs.vpn-user }}\n${{ inputs.vpn-pass }}\n" ; } | sudo openvpn --config .github/vpn.ovpn --daemon
+
+    # Steps for Windows runners
+    - name: Write VPN Files (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        mkdir -Force $HOME\.ssh
+        Set-Content -Path .github\vpn.ovpn -Value "${{ inputs.ovpn-config }}"
+        Get-ChildItem -Path .github\vpn.ovpn
+    - name: Install openvpn3 (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        choco install openvpn
+    - name: VPN Connect (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        echo "${{ inputs.vpn-user }}" | Out-File -FilePath user.txt -Encoding ascii
+        echo "${{ inputs.vpn-pass }}" | Out-File -FilePath pass.txt -Encoding ascii
+        & "C:\Program Files\OpenVPN\bin\openvpn.exe" --config .github\vpn.ovpn --auth-user-pass user.txt --daemon
