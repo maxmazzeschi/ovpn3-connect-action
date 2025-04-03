@@ -20,7 +20,7 @@ jobs:
             ovpn-config:  ${{ secrets.OVPN_CONFIG }}
             vpn-user:     ${{ secrets.OVPN_USER }}
             vpn-pass:     ${{ secrets.OVPN_PASS }}
-      - name: Kill VPN Connection
+      - name: Network check
         if: always()
         run: |
           ipconfig /all
