@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: ovpn3-connect-action-container
+        uses: maxmazzeschi/ovpn3-connect-action@main
+        with:
+            ovpn-config:  ${{ secrets.OVPN_CONFIG }}
+            vpn-user:     ${{ secrets.OVPN_USER }}
+            vpn-pass:     ${{ secrets.OVPN_PASS }}
+      - name: Kill VPN Connection
+        if: always()
+        run: |
+          sudo pkill openvpn
