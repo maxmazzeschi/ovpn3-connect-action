@@ -50,6 +50,14 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
+        W# Get the name of the VPN interface (e.g., "TAP-Windows Adapter")
+        $vpnInterfaceName = "TAP-Windows Adapter"  # Modify this if your VPN uses a different interface name
+
+        # Get the gateway IP for the VPN interface
+        $vpnGateway = (route print | Select-String -Pattern $vpnInterfaceName -Context 0,1 | 
+            Select-String -Pattern "0.0.0.0" | 
+            ForEach-Object { ($_ -split '\s+')[2] }).Trim()
+        echo $vpnGateway
         echo "${{ inputs.vpn-user }}" | Out-File -FilePath auth.txt -Encoding ascii
         echo "${{ inputs.vpn-pass }}" | Out-File -Append -FilePath auth.txt -Encoding ascii
-        Start-Process "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config ".github\vpn.ovpn" --auth-user-pass "auth.txt" --allow-compression yes --route-nopull --route 10.10.0.0 vpn_gateway'
+        Start-Process "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config ".github\vpn.ovpn" --auth-user-pass "auth.txt" --allow-compression yes --route-nopull --route 10.10.0.0 $vpnGateway'

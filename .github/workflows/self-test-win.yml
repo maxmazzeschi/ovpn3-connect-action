@@ -23,4 +23,8 @@ jobs:
       - name: Kill VPN Connection
         if: always()
         run: |
+          ipconfig /all
+      - name: Kill VPN Connection
+        if: always()
+        run: |
           taskkill /F /IM openvpn.exe
