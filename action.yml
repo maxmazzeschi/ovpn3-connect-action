@@ -52,4 +52,4 @@ runs:
       run: |
         echo "${{ inputs.vpn-user }}" | Out-File -FilePath auth.txt -Encoding ascii
         echo "${{ inputs.vpn-pass }}" | Out-File -Append -FilePath auth.txt -Encoding ascii
-        Start-Process "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config ".github\vpn.ovpn" --auth-user-pass "auth.txt" --allow-compression yes'
+        Start-Process "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config ".github\vpn.ovpn" --auth-user-pass "auth.txt" --allow-compression yes --route-nopull --route 192.168.1.0 vpn_gateway'
