@@ -52,4 +52,4 @@ runs:
       run: |
         echo "${{ inputs.vpn-user }}" | Out-File -FilePath auth.txt -Encoding ascii
         echo "${{ inputs.vpn-pass }}" | Out-File -Append -FilePath auth.txt -Encoding ascii
-        & "C:\Program Files\OpenVPN\bin\openvpn.exe" --config .github\vpn.ovpn --auth-user-pass auth.txt --daemon
+        & "C:\Program Files\OpenVPN\bin\openvpn.exe" --config .github\vpn.ovpn --auth-user-pass auth.txt
