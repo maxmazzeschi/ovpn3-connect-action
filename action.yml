@@ -50,7 +50,7 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        W# Get the name of the VPN interface (e.g., "TAP-Windows Adapter")
+        # Get the name of the VPN interface (e.g., "TAP-Windows Adapter")
         $vpnInterfaceName = "TAP-Windows Adapter"  # Modify this if your VPN uses a different interface name
 
         # Get the gateway IP for the VPN interface
