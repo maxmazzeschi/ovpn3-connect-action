@@ -54,7 +54,7 @@ runs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        "C:\Program Files\OpenVPN Connect\ovpnconnector.exe" --daemon
+        "C:\Program Files\OpenVPN Connect\ovpnconnector.exe" install
         Start-Sleep -Seconds 5
         $vpnConfig = Get-Content -Path .github\vpn.ovpn -Raw
         $vpnConfig | Set-Content -Path "$env:ProgramData\OpenVPN Connect\config.ovpn" -Force
