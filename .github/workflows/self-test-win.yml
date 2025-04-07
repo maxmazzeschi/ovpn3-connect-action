@@ -15,7 +15,7 @@ jobs:
       - name: ovpn3-connect-action
         uses: maxmazzeschi/ovpn3-connect-action@main
         with:
-            ovpn-config:  ${{ secrets.OVPN_CONFIG }}
+            ovpn-config:  ${{ secrets.OVPN_CONFIG_WIN }}
             vpn-user:     ${{ secrets.OVPN_USER }}
             vpn-pass:     ${{ secrets.OVPN_PASS }}
       - name: Network check

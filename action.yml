@@ -41,30 +41,16 @@ runs:
         mkdir -Force $HOME\.ssh
         Set-Content -Path .github\vpn.ovpn -Value "${{ inputs.ovpn-config }}"
         Get-ChildItem -Path .github\vpn.ovpn
-    - name: Install openvpn3 connect (Windows)
+    - name: Install openvpn community (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        $Url = "https://openvpn.net/downloads/openvpn-connect-v3-windows.msi"
-        $Output = "$env:TEMP\openvpn-connect-v3-windows.msi"
-        Invoke-WebRequest -Uri $Url -OutFile $Output
-        Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $Output /quiet /norestart" -Wait
-        Remove-Item -Path $Output -Force
+        choco install openvpn    
     - name: VPN Connect (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        "C:\Program Files\OpenVPN Connect\ovpnconnector.exe" install
-        Start-Sleep -Seconds 5
-        $vpnConfig = Get-Content -Path .github\vpn.ovpn -Raw
-        $vpnConfig | Set-Content -Path "$env:ProgramData\OpenVPN Connect\config.ovpn" -Force
-        $vpnUser = "${{ inputs.vpn-user }}"
-        $vpnPass = "${{ inputs.vpn-pass }}"
-        $vpnPass = ConvertTo-SecureString -String $vpnPass -AsPlainText -Force
-        $vpnCred = New-Object System.Management.Automation.PSCredential($vpnUser, $vpnPass)
-        $vpnCred | Export-Clixml -Path "$env:ProgramData\OpenVPN Connect\config.ovpn.xml" -Force
-        Start-Sleep -Seconds 5
-        & "C:\Program Files\OpenVPN Connect\ovpnconnector.exe" --connect "$env:ProgramData\OpenVPN Connect\config.ovpn" --user "$vpnUser" --password "$vpnPass"
+        & "openvpn --connect .github\vpn.ovpn"
     - name: Network check
       if: always()
       shell: pwsh
