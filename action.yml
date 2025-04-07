@@ -39,7 +39,8 @@ runs:
       shell: pwsh
       run: |
         mkdir -Force $HOME\.ssh
-        Set-Content -Path .github\vpn.ovpn -Value "${{ inputs.ovpn-config }}"
+        $ovpnConfig = "${{ inputs.ovpn-config }}"
+        $ovpnConfig | Out-File -FilePath .github\vpn.ovpn -Encoding utf8
         Get-ChildItem -Path .github\vpn.ovpn
     - name: Install openvpn community (Windows)
       if: runner.os == 'Windows'
