@@ -45,20 +45,10 @@ runs:
     - name: Install openvpn community (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
-      run: |
+      run: |  
         choco install openvpn    
     - name: VPN Connect (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
         & "openvpn --connect .github\vpn.ovpn"
-    - name: Network check
-      if: always()
-      shell: pwsh
-      run: |
-        ipconfig /all
-    - name: Kill VPN Connection
-      if: always()
-      shell: pwsh
-      run: |
-        taskkill /F /IM openvpn.exe
